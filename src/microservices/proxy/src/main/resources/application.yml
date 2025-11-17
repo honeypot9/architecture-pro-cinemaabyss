@@ -1,0 +1,40 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: migration-route
+          uri: no://op  # GlobalFilter установит целевой URI
+          predicates:
+            - Path=/api/movies/**,/api/users/**
+        - id: default-route
+          uri: http://httpbin.org
+          predicates:
+            - Path=/**
+
+server:
+  port: 8000
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.web: DEBUG
+    reactor.netty: DEBUG
+    org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter: TRACE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, gateway, routes
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true
+
