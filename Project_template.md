@@ -57,7 +57,7 @@ https://github.com/honeypot9/architecture-pro-cinemaabyss/blob/cinema/schemas/sp
     - Добавьте в docker-compose новый сервис, kafka там уже есть
 
 Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
-Приложите скриншот тестов и скриншот состояния топиков Kafka http://localhost:8090 
+Приложите _скриншот тестов и скриншот состояния топиков_ Kafka http://localhost:8090 
 
 
 ## Задание 3

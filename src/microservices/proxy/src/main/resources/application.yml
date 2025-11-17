@@ -1,3 +1,6 @@
+app:
+  migration-percent: ${MIGRATION_PERCENT:50}
+
 spring:
   cloud:
     gateway:

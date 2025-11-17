@@ -9,16 +9,19 @@ import org.springframework.core.Ordered
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
+import yandex.practicum.config.ApplicationProperties
 import java.net.URI
 import java.util.concurrent.ThreadLocalRandom
 
 @Component
-class MigrationFilter : GlobalFilter, Ordered {
+class MigrationFilter(
+    applicationProperties: ApplicationProperties
+) : GlobalFilter, Ordered {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     private val config = MigrationConfig(
-        migrationPercent = 50, // 50% трафика в новый сервис
+        migrationPercent = applicationProperties.migrationPercent?: 50,
         oldService = "http://localhost:8080",
         newService = "http://localhost:8081"
     )
