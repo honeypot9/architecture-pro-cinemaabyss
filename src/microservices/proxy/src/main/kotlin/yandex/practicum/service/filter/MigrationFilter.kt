@@ -22,8 +22,8 @@ class MigrationFilter(
 
     private val config = MigrationConfig(
         migrationPercent = applicationProperties.migrationPercent?: 50,
-        oldService = "http://movies-service:8080",
-        newService = "http://monolith:8081"
+        oldService = "http://monolith:8080",
+        newService = "http://movies-service:8081"
     )
 
     override fun filter(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
