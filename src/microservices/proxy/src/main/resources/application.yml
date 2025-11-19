@@ -1,5 +1,5 @@
 app:
-  migration-percent: ${MIGRATION_PERCENT:50}
+  migration-percent: ${MOVIES_MIGRATION_PERCENT:50}
 
 spring:
   cloud:
