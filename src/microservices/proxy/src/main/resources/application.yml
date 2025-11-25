@@ -9,10 +9,6 @@ spring:
           uri: no://op  # GlobalFilter установит целевой URI
           predicates:
             - Path=/api/movies/**,/api/users/**
-        - id: default-route
-          uri: http://httpbin.org
-          predicates:
-            - Path=/**
 
 server:
   port: 8000
