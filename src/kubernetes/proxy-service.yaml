@@ -3,11 +3,18 @@ kind: Deployment
 metadata:
   name: proxy-service
   namespace: cinemaabyss
+  labels:
+    app: proxy-service
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: proxy-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   template:
     metadata:
       labels:
@@ -15,31 +22,50 @@ spec:
     spec:
       containers:
         - name: proxy-service
-          image: ghcr.io/honeypot9/architecture-pro-cinemaabyss/proxy-service:latest
+          image: ghcr.io/honeypot9/architecture-cinemaabyss/proxy-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: "default"
-            - name: JAVA_OPTS
-              value: "-Xmx256m -Xms128m"
-          # НИКАКИХ REACTOR_NETTY ПЕРЕМЕННЫХ!
+            - name: PORT
+              value: "8000"
+          envFrom:
+            - configMapRef:
+                name: cinemaabyss-config
+            - secretRef:
+                name: cinemaabyss-secrets
           resources:
-            requests:
-              memory: "384Mi"
-              cpu: "200m"
             limits:
-              memory: "512Mi"
               cpu: "300m"
-          livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8000
-            initialDelaySeconds: 180  # Увеличиваем для Spring Boot 3
-            periodSeconds: 30
+              memory: "256Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
           readinessProbe:
             httpGet:
-              path: /actuator/health
+              path: /health
               port: 8000
-            initialDelaySeconds: 90
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
             periodSeconds: 20
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: dockerconfigjson
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy-service
+  namespace: cinemaabyss
+spec:
+  selector:
+    app: proxy-service
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP

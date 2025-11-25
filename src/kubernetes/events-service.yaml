@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: events-service
-          image: ghcr.io/morozkinas/architecture-cinemaabyss/events-service:latest
+          image:  ghcr.io/honeypot9/architecture-pro-cinemaabyss/events-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
@@ -63,6 +63,6 @@ spec:
   selector:
     app: events-service
   ports:
-    - port: 80
+    - port: 8082
       targetPort: 8082
   type: ClusterIP

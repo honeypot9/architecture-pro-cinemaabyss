@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: movies-service
-          image:  ghcr.io/honeypot9/architecture-pro-cinemaabyss/movies-service:latest
+          image: ghcr.io/honeypot9/architecture-cinemaabyss/movies-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
@@ -38,20 +38,20 @@ spec:
                 name: cinemaabyss-secrets
           resources:
             limits:
-              cpu: "500m"
-              memory: "512Mi"
+              cpu: "300m"
+              memory: "256Mi"
             requests:
               cpu: "100m"
               memory: "128Mi"
           readinessProbe:
             httpGet:
-              path: /api/movies
+              path: /api/movies/health
               port: 8081
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /api/movies
+              path: /api/movies/health
               port: 8081
             initialDelaySeconds: 15
             periodSeconds: 20
