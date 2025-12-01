@@ -3,16 +3,15 @@
 ## Задание 1
 
 1. Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
-Результат представьте в виде контейнерной диаграммы в нотации С4.
-Добавьте ссылку на файл в этот шаблон
-https://github.com/honeypot9/architecture-pro-cinemaabyss/blob/cinema/schemas/sprint_2_1_containers.uml
 
+**Контейнерная диаграмма в нотации С4:**
+
+https://github.com/honeypot9/architecture-pro-cinemaabyss/blob/cinema/schemas/sprint_2_1_containers.uml
 
 ## Задание 2
 
 ### 1. Proxy
 Команда КиноБездны уже выделила сервис метаданных о фильмах movies и вам необходимо реализовать бесшовный переход с применением паттерна Strangler Fig в части реализации прокси-сервиса (API Gateway), с помощью которого можно будет постепенно переключать траффик, используя фиче-флаг.
-
 
 Реализуйте сервис на любом языке программирования в ./src/microservices/proxy.
 Конфигурация для запуска сервиса через docker-compose уже добавлена
@@ -56,9 +55,15 @@ https://github.com/honeypot9/architecture-pro-cinemaabyss/blob/cinema/schemas/sp
     - Реализуйте простой API, при вызове которого будут создаваться события User/Payment/Movie и обрабатываться внутри сервиса с записью в лог
     - Добавьте в docker-compose новый сервис, kafka там уже есть
 
-Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
-Приложите _скриншот тестов и скриншот состояния топиков_ Kafka http://localhost:8090 
+**Результаты прогона тестов:**
 
+[Скриншот тестов Postman](screenshots/postman-tests-task2.png)
+
+*Все тесты проходят успешно*
+
+**Топики Kafka:**
+
+[Скриншот Kafka UI](screenshots/2_2_kafka_topics.png)
 
 ## Задание 3
 
@@ -110,6 +115,20 @@ jobs:
 Как только сборка отработает и в github registry появятся ваши образы, можно переходить к блоку настройки Kubernetes
 Успешным результатом данного шага является "зеленая" сборка и "зеленые" тесты
 
+Деплой выполнен успешно.
+https://github.com/honeypot9/architecture-pro-cinemaabyss/actions/runs/19673321848
+
+Тесты прошли успешно
+https://github.com/honeypot9/architecture-pro-cinemaabyss/actions/runs/19663414415
+
+.github/workflows/docker-build-push.yml может собирать и публиковать образы proxy-service и events-service в GitHub Container Registry.
+
+Готовые образы в GitHub Packages:
+
+ghcr.io/honeypot9/architecture-pro-cinemaabyss/proxy-service:latest
+ghcr.io/honeypot9/architecture-pro-cinemaabyss/events-service:latest
+ghcr.io/honeypot9/architecture-pro-cinemaabyss/movies-service:latest
+ghcr.io/honeypot9/architecture-pro-cinemaabyss/monolith:latest
 
 ### Proxy в Kubernetes
 
@@ -272,8 +291,15 @@ cat .docker/config.json | base64
   Откройте логи event-service и сделайте скриншот обработки событий
 
 #### Шаг 3
-Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
 
+Вызов https://cinemaabyss.example.com/api/movies
+![https://cinemaabyss.example.com/api/movies](screenshots%2F3_1_test_api_movies.png)
+
+Логи event-service
+![Логи event-service](screenshots%2F2_2_event_service_test_result.png)
+
+Npm тесты
+![Npm тесты](screenshots%2F2_2_npm_test_result.png)
 
 ## Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
@@ -349,6 +375,11 @@ minikube tunnel
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
 
+Деплой с helm
+![helm](screenshots%2F4_1_helm_deploy.png)
+
+Тесты после деплоя
+![Тесты](screenshots%2F4_2_test_after_helm_deploy.png)
 
 # Задание 5
 Компания планирует активно развиваться и для повышения надежности, безопасности, реализации сетевых паттернов типа Circuit Breaker и канареечного деплоя вам как архитектору необходимо развернуть istio и настроить circuit breaker для monolith и movies сервисов.
