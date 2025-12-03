@@ -57,6 +57,9 @@ https://github.com/honeypot9/architecture-pro-cinemaabyss/blob/cinema/schemas/sp
 
 **Результаты прогона тестов:**
 
+Обновил результаты тестов через postman
+![Обновленный_скриншот тестов Postman](screenshots%2F2_2_test_result_UPD.png)
+
 [Скриншот тестов Postman](screenshots/postman-tests-task2.png)
 
 *Все тесты проходят успешно*
