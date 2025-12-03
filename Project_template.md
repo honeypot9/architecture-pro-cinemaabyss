@@ -126,9 +126,13 @@ https://github.com/honeypot9/architecture-pro-cinemaabyss/actions/runs/196634144
 Готовые образы в GitHub Packages:
 
 ghcr.io/honeypot9/architecture-pro-cinemaabyss/proxy-service:latest
+
 ghcr.io/honeypot9/architecture-pro-cinemaabyss/events-service:latest
+
 ghcr.io/honeypot9/architecture-pro-cinemaabyss/movies-service:latest
+
 ghcr.io/honeypot9/architecture-pro-cinemaabyss/monolith:latest
+
 
 ### Proxy в Kubernetes
 
