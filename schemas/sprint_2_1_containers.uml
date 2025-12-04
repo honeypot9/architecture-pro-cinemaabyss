@@ -1,28 +1,55 @@
 @startuml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor Black
+}
+skinparam component {
+  BackgroundColor White
+  BorderColor Black
+}
+skinparam shadowing false
 
-skinparam wrapWidth 300
+' Клиентские приложения
+rectangle "Web / Mobile / Smart TV" as Clients #FFE599
 
- title
-   <b>Задание 1. Проектирование микросервисной архитектуры «Кинобездна»</b>
-   <i>Визуализация контекста системы To Be — диаграмма С4</i>
- end title
+' API Gateway
+rectangle "API Gateway (Proxy)" as APIGW
 
- Enterprise_Boundary(warmhouse, "Стриминговый сервис «Кинобездна» To Be") {
-   Container(device_domain, "Управление устройствами", "device", "kotlin")
-   Container(integration_domain, "Управление интеграцией устройств", "integration", "kotlin")
-   Container(telemetry_domain, "Управление телеметрией устройств", "telemetry", "kotlin")
-   Container(user_domain, "Управление пользователями", "user", "kotlin")
-   Container(device_scenario_domain, "Управление пользовательскими сценариями", "scenario", "kotlin")
- }
+Clients -down-> APIGW
 
- Person_Ext(user, "Пользователи")
- System_Ext(device, "Устройства")
+' Сервисы домена
+rectangle "movies-service" as Movies #C6E0B4
+rectangle "users-service" as Users #C6E0B4
+rectangle "payments-service" as Payments #C6E0B4
+rectangle "favorites-service" as Favorites #C6E0B4
 
- Rel_U(device_domain, device, "Подключение/отключение устройств")
- Rel_U(telemetry_domain, device, "Мониторинг и телеметрия устройств")
- Rel_U(integration_domain, device, "Поддержка протоколов устройств")
- Rel_U(user_domain, user, "Учет пользователей")
- Rel_U(device_scenario_domain, user, "Создание пользовательских сценариев")
+' БД сервисов
+database "PostgreSQL (movies)" as DB_Movies #F4CCCC
+database "PostgreSQL (users)" as DB_Users #F4CCCC
+database "PostgreSQL (payments)" as DB_Payments #F4CCCC
+database "PostgreSQL (favorites)" as DB_Favorites #F4CCCC
 
+' Внешняя рекомендательная система
+rectangle "Рекомендательная система\n(внешняя)" as Reco #D9E1F2
+
+' Сервис событий и Kafka
+rectangle "events-service" as Events #D9D2E9
+rectangle "Kafka" as Kafka #EAD1DC
+
+' Связи от API Gateway к сервисам
+APIGW -down-> Movies
+APIGW -down-> Users
+APIGW -down-> Payments
+APIGW -down-> Favorites
+APIGW -down-> Events
+
+' Связи сервисов с БД
+Movies -down-> DB_Movies
+Users -down-> DB_Users
+Payments -down-> DB_Payments
+Favorites -down-> DB_Favorites
+
+' Внешние интеграции
+Favorites -right-> Reco
+Events -right-> Kafka
 @enduml
