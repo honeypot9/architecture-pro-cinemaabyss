@@ -4,9 +4,16 @@ metadata:
   name: cinemaabyss-ingress
   namespace: cinemaabyss
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/http2-push-preload: "false"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($scheme = https) {
+        return 444;
+      }
 spec:
+  ingressClassName: nginx  # ← Новая обязательная спецификация
   rules:
     - host: cinemaabyss.example.com
       http:
