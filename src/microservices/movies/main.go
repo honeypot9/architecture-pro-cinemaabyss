@@ -214,8 +214,6 @@ func handleUsers(w http.ResponseWriter, r *http.Request) {
     		} else {
     			getAllUsers(w, r)
     		}
-    	case "POST":
-    		createUser(w, r)
     	default:
     		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
     	}
