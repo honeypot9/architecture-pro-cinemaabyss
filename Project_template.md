@@ -308,6 +308,9 @@ cat .docker/config.json | base64
 Npm тесты
 ![Npm тесты](screenshots%2F2_2_npm_test_result.png)
 
+Npm тесты после ревью
+![Npm тесты после ревью](screenshots%2F2_2_npm_test_result_after_review.png)![Npm тесты](screenshots%2F2_2_npm_test_result.png)
+
 ## Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
 
