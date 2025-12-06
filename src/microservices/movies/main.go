@@ -15,6 +15,12 @@ import (
 var db *sql.DB
 
 // Models
+type User struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
 type Movie struct {
 	ID          int      `json:"id"`
 	Title       string   `json:"title"`
@@ -31,6 +37,7 @@ func main() {
 	// Set up HTTP routes
 	http.HandleFunc("/api/movies", handleMovies)
 	http.HandleFunc("/api/movies/health", handleHealth)
+	http.HandleFunc("/api/users", handleUsers)
 
 	// Start server
 	port := os.Getenv("PORT")
@@ -194,4 +201,55 @@ func createMovie(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(m)
+}
+
+// User handlers
+func handleUsers(w http.ResponseWriter, r *http.Request) {
+        log.Printf("handleUsers called: Method=%s, URL=%s", r.Method, r.URL.String())
+    	switch r.Method {
+    	case "GET":
+            log.Printf("GET request, Query id=%s", r.URL.Query().Get("id"))
+    		if r.URL.Query().Get("id") != "" {
+    			getUserByID(w, r)
+    		} else {
+    			getAllUsers(w, r)
+    		}
+    	default:
+    		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+    	}
+}
+
+func getUserByID(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	var u User
+	err := db.QueryRow("SELECT id, username, email FROM users WHERE id = $1", id).Scan(&u.ID, &u.Username, &u.Email)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(u)
+}
+
+func getAllUsers(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.Query("SELECT id, username, email FROM users")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	users := []User{}
+	for rows.Next() {
+		var u User
+		if err := rows.Scan(&u.ID, &u.Username, &u.Email); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		users = append(users, u)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
 }

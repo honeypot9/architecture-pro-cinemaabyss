@@ -1,0 +1,55 @@
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor Black
+}
+skinparam component {
+  BackgroundColor White
+  BorderColor Black
+}
+skinparam shadowing false
+
+' Клиентские приложения
+rectangle "Web / Mobile / Smart TV" as Clients #FFE599
+
+' API Gateway
+rectangle "API Gateway (Proxy)" as APIGW
+
+Clients -down-> APIGW
+
+' Сервисы домена
+rectangle "movies-service" as Movies #C6E0B4
+rectangle "users-service" as Users #C6E0B4
+rectangle "payments-service" as Payments #C6E0B4
+rectangle "favorites-service" as Favorites #C6E0B4
+
+' БД сервисов
+database "PostgreSQL (movies)" as DB_Movies #F4CCCC
+database "PostgreSQL (users)" as DB_Users #F4CCCC
+database "PostgreSQL (payments)" as DB_Payments #F4CCCC
+database "PostgreSQL (favorites)" as DB_Favorites #F4CCCC
+
+' Внешняя рекомендательная система
+rectangle "Рекомендательная система\n(внешняя)" as Reco #D9E1F2
+
+' Сервис событий и Kafka
+rectangle "events-service" as Events #D9D2E9
+rectangle "Kafka" as Kafka #EAD1DC
+
+' Связи от API Gateway к сервисам
+APIGW -down-> Movies
+APIGW -down-> Users
+APIGW -down-> Payments
+APIGW -down-> Favorites
+APIGW -down-> Events
+
+' Связи сервисов с БД
+Movies -down-> DB_Movies
+Users -down-> DB_Users
+Payments -down-> DB_Payments
+Favorites -down-> DB_Favorites
+
+' Внешние интеграции
+Favorites -right-> Reco
+Events -right-> Kafka
+@enduml

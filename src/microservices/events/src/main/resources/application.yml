@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: events
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    consumer:
+      group-id: events-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "yandex.practicum.dto.*"
+        spring.json.type.mappings:
+          userEvent:yandex.practicum.dto.UserDto,
+          movieEvent:yandex.practicum.dto.MovieDto,
+          paymentEvent:yandex.practicum.dto.PaymentDto
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
+      properties:
+        retry.backoff.ms: 1000
+
+app:
+  kafka:
+    topics:
+      movie-events: movie-events
+      payment-events: payment-events
+      user-events: user-events
+
+server:
+  port: 8082
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    yandex.practicum: DEBUG
